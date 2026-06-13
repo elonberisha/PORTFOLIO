@@ -1,0 +1,314 @@
+/* Fontshare — Array Wide (display) · Switzer (body) · Zodiak (serif italic) */
+@import url("https://api.fontshare.com/v2/css?f[]=switzer@300,301,400,401,500,600&f[]=zodiak@400,401,701&display=swap");
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Array Wide";
+  src:
+    url("https://cdn.fontshare.com/wf/V53YESOWYHBUNRPDB3QFLMVKNMB6BRHT/BZTHQEU54BMF7N2Z6P3HZPM5DJ3WYKKB/HU6RK3235LIDCC3OMCBSE6JYJ4OS5FSR.woff2") format("woff2"),
+    url("https://cdn.fontshare.com/wf/V53YESOWYHBUNRPDB3QFLMVKNMB6BRHT/BZTHQEU54BMF7N2Z6P3HZPM5DJ3WYKKB/HU6RK3235LIDCC3OMCBSE6JYJ4OS5FSR.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Array Wide";
+  src:
+    url("https://cdn.fontshare.com/wf/ELTV7SLXR6JBBDHIXTPIUNKRTJWXENBC/IITZGLZLU6SE47TIUWFMT7V5CNTXNRU3/QDDNC5ZGCUFBHQWMPEDCBDMNMQSIVJAQ.woff2") format("woff2"),
+    url("https://cdn.fontshare.com/wf/ELTV7SLXR6JBBDHIXTPIUNKRTJWXENBC/IITZGLZLU6SE47TIUWFMT7V5CNTXNRU3/QDDNC5ZGCUFBHQWMPEDCBDMNMQSIVJAQ.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* Warm gallery white + electric cobalt */
+  --color-bg:      #f7f5f0;   /* warm paper white */
+  --color-bg-2:    #efece4;   /* recessed surface */
+  --color-card:    #fbfaf7;   /* raised sheet */
+  --color-ink:     #161513;
+  --color-dim:     #6e6a60;
+  --color-faint:   #a8a294;
+  --color-hair:    #e2ddd0;   /* hairline */
+  --color-hair-2:  #c9c2b0;   /* stronger hairline */
+  --color-accent:  #2b3cff;   /* international klein blue */
+  --color-ok:      #1f7a3d;
+
+  --font-display: "Array Wide", "Helvetica Neue", Arial, sans-serif;
+  --font-serif:   "Zodiak", Georgia, serif;
+  --font-body:    "Switzer", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-bg);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+* { box-sizing: border-box; }
+
+a { text-decoration: none; color: inherit; }
+button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; padding: 0; }
+img { display: block; max-width: 100%; }
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ── Layout ── */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ── Editorial labels — (01) about ── */
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-dim);
+}
+.meta-label .paren {
+  color: var(--color-accent);
+}
+
+/* ── Serif italic accent voice ── */
+.serif-it {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ── Underline that draws in ── */
+.link-under {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s cubic-bezier(0.625, 0.05, 0, 1), color 0.2s ease;
+  padding-bottom: 2px;
+}
+.link-under:hover {
+  color: var(--color-accent);
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+/* the inverse: no line until hover */
+.link-under-in {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s cubic-bezier(0.625, 0.05, 0, 1), color 0.2s ease;
+  padding-bottom: 2px;
+}
+.link-under-in:hover {
+  background-size: 100% 1px;
+}
+
+/* ── Ink button ── */
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-ink);
+  color: var(--color-bg) !important;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 16px 28px;
+  border-radius: 2px;
+  transition: background 0.25s cubic-bezier(0.625, 0.05, 0, 1), transform 0.25s cubic-bezier(0.625, 0.05, 0, 1);
+  will-change: transform;
+}
+.btn-ink:hover {
+  background: var(--color-accent);
+  transform: translateY(-2px);
+}
+.btn-ink:active { transform: translateY(0); }
+
+/* ── Hairline rules ── */
+.rule-t { border-top: 1px solid var(--color-hair); }
+.rule-b { border-bottom: 1px solid var(--color-hair); }
+
+/* ── Portrait frame and 3D stage ── */
+.portrait-stage {
+  perspective: 1200px;
+  perspective-origin: 50% 42%;
+}
+
+.portrait-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  will-change: transform, box-shadow;
+}
+
+.portrait-face {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  isolation: isolate;
+}
+
+.portrait-depth {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(22, 21, 19, 0.18);
+  transform: translateZ(-18px) translate(10px, 10px);
+  background: color-mix(in srgb, var(--color-ink) 7%, var(--color-bg-2));
+  pointer-events: none;
+  z-index: -1;
+}
+
+.portrait-sheen {
+  --sheen-x: -45%;
+  position: absolute;
+  inset: -22% auto -22% 0;
+  width: 46%;
+  transform: translate3d(var(--sheen-x), 0, 24px) rotate(18deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.28),
+    transparent
+  );
+  mix-blend-mode: screen;
+  opacity: 0.42;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.frame-offset {
+  position: relative;
+}
+.frame-offset::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-hair-2);
+  transform: translate(12px, 12px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.portrait-dev img {
+  filter: none;
+}
+
+/* ── Project rows ── */
+.proj-row {
+  border-top: 1px solid var(--color-hair);
+  transition: background 0.3s ease;
+}
+.proj-row:hover {
+  background: var(--color-card);
+}
+.proj-row:last-child {
+  border-bottom: 1px solid var(--color-hair);
+}
+
+/* ── Filter toggles ── */
+.filter-tog {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  color: var(--color-dim);
+  transition: color 0.2s ease;
+  padding-bottom: 2px;
+}
+.filter-tog:hover:not(:disabled) { color: var(--color-ink); }
+.filter-tog[data-active="true"] {
+  color: var(--color-accent);
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+}
+.filter-tog:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Structural grid — two vertical hairlines framing the page, always visible ── */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1200px, calc(100% - 32px));
+  border-left: 1px solid var(--color-hair);
+  border-right: 1px solid var(--color-hair);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Outlined numerals — big print indexes ── */
+.num-outline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.85;
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--color-hair-2);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Paper grain — barely there, print texture ── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+/* ── Footer giant signature — letters lift on hover ── */
+.gname {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  display: inline-block;
+  white-space: nowrap;
+}
+.gname .ch {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.625, 0.05, 0, 1), color 0.3s ease;
+  will-change: transform;
+}
+.gname:hover .ch {
+  color: var(--color-dim);
+}
+.gname .ch:hover {
+  transform: translateY(-0.08em);
+  color: var(--color-accent) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
