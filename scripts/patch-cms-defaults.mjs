@@ -23,12 +23,93 @@ const client = createClient({
 })
 
 const settingsPatch = {
+  role: 'AI Developer - Full-Stack Software Developer - Student at AAB University',
+  navMeta: 'AI / full-stack',
+  heroSub:
+    'I build practical AI-enabled software, full-stack web systems, and reliable backend products as part of the DevyCore team.',
+  heroPhotoRole: 'AI DEV\nFULL STACK',
+  aboutQuote:
+    'A Computer Science student at AAB University, part of the DevyCore team, and a software developer focused on AI-enabled products, full-stack systems, and clean backend architecture.',
+  aboutBody:
+    'I build software across the stack: practical AI features, web interfaces, APIs, databases, authentication, and deployment flows. My work is strongest where product thinking and engineering meet.\n\nI am part of the DevyCore team, where I contribute to real product builds and sharpen the kind of execution that matters in production: clear structure, reliable systems, and interfaces people can actually use.\n\nMy current focus is AI development, full-stack software development, Java, Spring Boot, PostgreSQL, cloud foundations, and modern web application architecture.',
+  focus: 'AI development - Full-stack software - APIs - Databases',
+  stackSubtitle: 'A practical AI and full-stack toolkit: software architecture, interfaces, APIs, databases, and deployment-minded engineering.',
+  projectsSubtitle: 'Selected work across AI-enabled products, full-stack web systems, backend APIs, and practical software builds.',
+  seoTitle: 'Elon Berisha - AI Developer & Full-Stack Software Developer',
+  seoDescription:
+    'Elon Berisha is an AI developer and full-stack software developer, student at AAB University, and part of the DevyCore team.',
+  entityRole: 'AI Developer & Full-Stack Software Developer',
+  entitySummary:
+    'Elon Berisha is an AI developer and full-stack software developer from Kosovo, a Computer Science student at AAB University, and part of the DevyCore team. He focuses on practical AI-enabled products, full-stack web systems, APIs, databases, Java, Spring Boot, PostgreSQL, and cloud-ready software architecture.',
+  entityKeywords: [
+    'AI developer',
+    'full-stack software developer',
+    'software developer Kosovo',
+    'DevyCore team',
+    'AI-enabled web applications',
+    'full-stack web development',
+    'backend API development',
+    'Java developer',
+    'Spring Boot',
+    'PostgreSQL',
+    'cloud computing foundations',
+    'Sanity CMS',
+    'Next.js',
+    'React',
+  ],
+  knowsAbout: [
+    'Artificial intelligence development',
+    'AI product development',
+    'Full-stack software development',
+    'Web application development',
+    'Backend engineering',
+    'REST APIs',
+    'Java',
+    'Spring Boot',
+    'PostgreSQL',
+    'Cloud computing',
+    'React',
+    'Next.js',
+    'Sanity CMS',
+    'Software architecture',
+    'Database design',
+    'Authentication',
+  ],
+  memberOfName: 'DevyCore',
+  aiSearchSectionLabel: '06 / AI Search Profile',
+  aiSearchTitle: 'Built to be understood by people and answer engines.',
+  aiSearchFacts: [
+    {
+      _key: 'who',
+      question: 'Who is Elon Berisha?',
+      answer:
+        'Elon Berisha is an AI developer and full-stack software developer from Kosovo, a Computer Science student at AAB University, and part of the DevyCore team.',
+    },
+    {
+      _key: 'specialization',
+      question: 'What does Elon Berisha specialize in?',
+      answer:
+        'Elon focuses on practical AI-enabled products, full-stack web applications, backend APIs, databases, Java, Spring Boot, PostgreSQL, cloud foundations, React, Next.js, and Sanity CMS.',
+    },
+    {
+      _key: 'team',
+      question: 'Is Elon Berisha part of DevyCore?',
+      answer:
+        'Yes. Elon Berisha is part of the DevyCore team, where he contributes to practical software builds, product interfaces, backend systems, and web platforms.',
+    },
+    {
+      _key: 'proof',
+      question: 'What proof supports Elon Berisha as a software developer?',
+      answer:
+        'His portfolio shows projects, verified certifications, technical stack, GitHub and LinkedIn profiles, and CMS-managed proof points including cloud, Java, backend APIs, PostgreSQL, and language certifications.',
+    },
+  ],
   aboutFacts: [
     { _key: 'location', label: 'Location', value: 'Prishtine, Kosovo' },
     { _key: 'university', label: 'University', value: 'AAB - CS, Programming - 2024-2027' },
-    { _key: 'focus', label: 'Focus', value: 'Backend - APIs - Databases - DevOps' },
+    { _key: 'focus', label: 'Focus', value: 'AI - Full-stack - APIs - Databases' },
     { _key: 'status', label: 'Status', value: 'Open for internships - remote / hybrid' },
-    { _key: 'team', label: 'Team', value: 'Devycore team' },
+    { _key: 'team', label: 'Team', value: 'DevyCore team' },
   ],
   certificationsAllLabel: 'All',
   projectsAllLabel: 'All',
@@ -66,13 +147,23 @@ const projectCategories = [
   ['Frontend', 'frontend', 2],
   ['Full Stack', 'full-stack', 3],
   ['AI / Automation', 'ai-automation', 4],
-  ['Design Systems', 'design-systems', 5],
-  ['DevOps', 'devops', 6],
-  ['SaaS', 'saas', 7],
-  ['Education', 'education', 8],
+  ['AI Products', 'ai-products', 5],
+  ['Design Systems', 'design-systems', 6],
+  ['DevOps', 'devops', 7],
+  ['SaaS', 'saas', 8],
+  ['Education', 'education', 9],
 ]
 
-await client.patch('settings').setIfMissing(settingsPatch).commit()
+const certificationCategories = [
+  ['AI', 'ai', 1],
+  ['Full Stack', 'full-stack', 2],
+  ['Backend', 'backend', 3],
+  ['Cloud', 'cloud', 4],
+  ['Language', 'lang', 5],
+  ['Other', 'other', 6],
+]
+
+await client.patch('settings').set(settingsPatch).commit()
 
 const socialLinks = await client.fetch('*[_type == "socialLink"]{_id, network, label}')
 
@@ -92,4 +183,14 @@ for (const [title, slug, order] of projectCategories) {
   })
 }
 
-console.log('CMS dynamic labels ready.')
+for (const [title, slug, order] of certificationCategories) {
+  await client.createIfNotExists({
+    _id: `certificationCategory-${slug}`,
+    _type: 'certificationCategory',
+    title,
+    slug: { _type: 'slug', current: slug },
+    order,
+  })
+}
+
+console.log('CMS SEO, AI profile, categories, and dynamic labels ready.')
