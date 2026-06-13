@@ -56,13 +56,16 @@ Mos harro të shtosh environment variables edhe në Vercel dashboard.
 Set these in Vercel before production deploy:
 
 ```env
+STUDIO_HOST=studio.elonberisha.com
 STUDIO_BASIC_USER=your_studio_user
 STUDIO_BASIC_PASSWORD=your_long_random_password
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id_here
 NEXT_PUBLIC_SANITY_DATASET=production
 ```
 
-`/studio` is protected by Basic Auth only in production. If either Studio credential is missing in production, `/studio` returns `404`.
+`/studio` is protected by Basic Auth only in production. On production, Studio is only available on the host configured with `STUDIO_HOST`. On the public domain (`elonberisha.com`), `/studio` returns `404`.
+
+If you want the subdomain spelled `studi.elonberisha.com`, set `STUDIO_HOST=studi.elonberisha.com` in Vercel and point that DNS record to the same Vercel project.
 
 Keep `SANITY_API_WRITE_TOKEN` local for scripts only. If that token has ever been shared in terminal output, chat context, screenshots, or logs, rotate it in Sanity and replace it in `.env.local`.
 

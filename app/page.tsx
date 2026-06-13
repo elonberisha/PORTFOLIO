@@ -13,9 +13,24 @@ import { About } from '@/components/About'
 import { Stack } from '@/components/Stack'
 import { Projects } from '@/components/Projects'
 import { Certifications } from '@/components/Certifications'
+import { AISearchProfile } from '@/components/AISearchProfile'
 import { Contact } from '@/components/Contact'
 import { Footer } from '@/components/Footer'
+import { safeHttpsUrl } from '@/lib/safe-url'
 import type { Metadata } from 'next'
+
+const SITE_URL = 'https://elonberisha.com'
+const DEFAULT_ENTITY_ROLE = 'AI Developer & Full-Stack Software Developer'
+const DEFAULT_ENTITY_KEYWORDS = [
+  'AI development',
+  'full-stack software development',
+  'Java',
+  'Spring Boot',
+  'PostgreSQL',
+  'cloud computing',
+  'API development',
+  'Devycore',
+]
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -57,6 +72,18 @@ const EMPTY_SETTINGS = {
   projectsYearLabel: '',
   projectsTypeLabel: '',
   projectsFallbackTypeLabel: '',
+  aiSearchSectionLabel: '',
+  aiSearchTitle: '',
+  seoTitle: '',
+  seoDescription: '',
+  entityRole: '',
+  entitySummary: '',
+  entityKeywords: [],
+  knowsAbout: [],
+  memberOfName: '',
+  memberOfUrl: null,
+  sameAsLinks: [],
+  aiSearchFacts: [],
   certificationsSectionLabel: '',
   certificationsTitle: '',
   certificationsAllLabel: '',
@@ -138,21 +165,51 @@ function jsonLdStringify(value: unknown) {
     .replace(/\u2029/g, '\\u2029')
 }
 
+function compact<T>(items: Array<T | null | undefined | false>) {
+  return items.filter(Boolean) as T[]
+}
+
+function uniqueStrings(items: Array<string | null | undefined>) {
+  return [...new Set(items.map((item) => item?.trim()).filter(Boolean))] as string[]
+}
+
+function getEntitySummary(s: typeof EMPTY_SETTINGS) {
+  return s.entitySummary || s.seoDescription || s.heroSub || [
+    s.name,
+    'is an AI developer and full-stack software developer',
+    s.memberOfName ? `and member of ${s.memberOfName}` : '',
+    'focused on practical software systems, AI-enabled products, APIs, and web applications.',
+  ].filter(Boolean).join(' ')
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const { settings: s } = await getData()
-  const title = [s.name, s.role].filter(Boolean).join(' — ')
+  const role = s.entityRole || s.role || DEFAULT_ENTITY_ROLE
+  const title = s.seoTitle || [s.name, role].filter(Boolean).join(' - ')
+  const description = s.seoDescription || s.entitySummary || s.heroSub || undefined
+  const portraitUrl = s.portrait
+    ? urlFor(s.portrait)?.width(1200).height(630).fit('crop').auto('format').quality(85).url() ?? undefined
+    : undefined
 
   return {
     title: title || undefined,
-    description: s.heroSub || undefined,
+    description,
+    alternates: {
+      canonical: SITE_URL,
+    },
     openGraph: {
+      type: 'profile',
+      url: SITE_URL,
       title: title || undefined,
-      description: s.heroSub || undefined,
+      description,
+      siteName: s.name || 'Elon Berisha',
+      images: portraitUrl ? [{ url: portraitUrl, width: 1200, height: 630, alt: `${s.name} portrait` }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: title || undefined,
-      description: s.heroSub || undefined,
+      description,
+      images: portraitUrl ? [portraitUrl] : undefined,
     },
   }
 }
@@ -163,19 +220,59 @@ export default async function Page() {
   const portraitUrl = s.portrait
     ? urlFor(s.portrait)?.width(960).height(1200).fit('crop').auto('format').quality(85).url() ?? null
     : null
+  const entityRole = s.entityRole || s.role || DEFAULT_ENTITY_ROLE
+  const entitySummary = getEntitySummary(s)
+  const knowsAbout = uniqueStrings([
+    ...DEFAULT_ENTITY_KEYWORDS,
+    ...(s.entityKeywords ?? []),
+    ...(s.knowsAbout ?? []),
+  ])
+  const sameAs = uniqueStrings([
+    safeHttpsUrl(s.linkedinUrl),
+    safeHttpsUrl(s.githubUrl),
+    ...(s.sameAsLinks ?? []).map((link: { url?: string | null }) => safeHttpsUrl(link.url)),
+  ])
+  const memberOfUrl = safeHttpsUrl(s.memberOfUrl)
+  const defaultFacts = compact([
+    {
+      question: `Who is ${s.name || 'Elon Berisha'}?`,
+      answer: entitySummary,
+    },
+    {
+      question: `What does ${s.name || 'Elon Berisha'} specialize in?`,
+      answer: `${s.name || 'Elon Berisha'} focuses on AI development, full-stack software development, API systems, web applications, and practical software products using technologies such as Java, Spring Boot, PostgreSQL, and modern web tools.`,
+    },
+    s.memberOfName && {
+      question: `Is ${s.name || 'Elon Berisha'} part of ${s.memberOfName}?`,
+      answer: `Yes. ${s.name || 'Elon Berisha'} is part of the ${s.memberOfName} team.`,
+    },
+  ])
+  const aiSearchFacts = s.aiSearchFacts?.length ? s.aiSearchFacts : defaultFacts
 
-  const jsonLd = {
+  const personJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': `${SITE_URL}/#person`,
+    url: SITE_URL,
     name: s.name,
-    jobTitle: s.role,
-    description: s.heroSub,
+    jobTitle: entityRole,
+    description: entitySummary,
+    image: portraitUrl ?? undefined,
     email: s.email,
     telephone: s.phone,
+    knowsAbout,
+    keywords: knowsAbout.join(', '),
     address: s.location
       ? {
           '@type': 'PostalAddress',
           addressLocality: s.location,
+        }
+      : undefined,
+    memberOf: s.memberOfName
+      ? {
+          '@type': 'Organization',
+          name: s.memberOfName,
+          url: memberOfUrl,
         }
       : undefined,
     alumniOf: s.university
@@ -184,8 +281,41 @@ export default async function Page() {
           name: s.university,
         }
       : undefined,
-    sameAs: [s.linkedinUrl, s.githubUrl].filter(Boolean),
+    sameAs,
   }
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: `${s.name || 'Elon Berisha'} Portfolio`,
+    description: entitySummary,
+    publisher: { '@id': `${SITE_URL}/#person` },
+  }
+  const profileJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    '@id': `${SITE_URL}/#profile`,
+    url: SITE_URL,
+    name: s.seoTitle || `${s.name || 'Elon Berisha'} - ${entityRole}`,
+    description: entitySummary,
+    mainEntity: { '@id': `${SITE_URL}/#person` },
+  }
+  const faqJsonLd = aiSearchFacts.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: aiSearchFacts.map((fact: { question?: string | null; answer?: string | null }) => ({
+          '@type': 'Question',
+          name: fact.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: fact.answer,
+          },
+        })),
+      }
+    : null
+  const jsonLd = compact([personJsonLd, websiteJsonLd, profileJsonLd, faqJsonLd])
 
   return (
     <>
@@ -242,6 +372,16 @@ export default async function Page() {
           yearLabel={s.projectsYearLabel}
           typeLabel={s.projectsTypeLabel}
           fallbackTypeLabel={s.projectsFallbackTypeLabel}
+        />
+        <AISearchProfile
+          sectionLabel={s.aiSearchSectionLabel}
+          title={s.aiSearchTitle || 'AI-searchable profile'}
+          summary={entitySummary}
+          role={entityRole}
+          keywords={s.entityKeywords}
+          knowsAbout={knowsAbout}
+          memberOfName={s.memberOfName}
+          facts={aiSearchFacts}
         />
         <Certifications
           certs={certifications}

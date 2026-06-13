@@ -5,6 +5,6 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       { userAgent: '*', allow: '/', disallow: ['/studio/', '/resume'] },
     ],
-    sitemap: 'https://elonberisha.dev/sitemap.xml',
+    sitemap: 'https://elonberisha.com/sitemap.xml',
   }
 }

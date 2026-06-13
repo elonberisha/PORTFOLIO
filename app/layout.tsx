@@ -10,6 +10,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://elonberisha.com'),
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
