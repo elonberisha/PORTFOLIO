@@ -78,6 +78,8 @@ export default defineType({
     defineField({ name: 'projectsSectionLabel', title: 'Projects Section Label', type: 'string' }),
     defineField({ name: 'projectsTitle', title: 'Projects Title', type: 'string' }),
     defineField({ name: 'projectsSubtitle', title: 'Projects Subtitle', type: 'text', rows: 2 }),
+    defineField({ name: 'projectsSelectedLabel', title: 'Projects Selected Filter Label', type: 'string', description: 'Default filter label, e.g. Selected' }),
+    defineField({ name: 'projectsInitialLimit', title: 'Projects Default Count', type: 'number', description: 'How many projects to show before the user clicks All.' }),
     defineField({ name: 'projectsAllLabel', title: 'Projects All Filter Label', type: 'string' }),
     defineField({ name: 'projectsFeaturedLabel', title: 'Projects Featured Label', type: 'string' }),
     defineField({ name: 'projectsStackLabel', title: 'Projects Stack Label', type: 'string' }),

@@ -28,6 +28,8 @@ interface Props {
   sectionLabel?: string | null
   title?: string | null
   subtitle?: string | null
+  selectedLabel?: string | null
+  initialLimit?: number | null
   allLabel?: string | null
   featuredLabel?: string | null
   stackLabel?: string | null
@@ -42,6 +44,8 @@ export function Projects({
   sectionLabel = '',
   title = '',
   subtitle = '',
+  selectedLabel = '',
+  initialLimit = 5,
   allLabel = '',
   featuredLabel = '',
   stackLabel = '',
@@ -49,9 +53,10 @@ export function Projects({
   typeLabel = '',
   fallbackTypeLabel = '',
 }: Props) {
-  const [active, setActive] = useState('all')
+  const [active, setActive] = useState('selected')
   const sectionParts = (sectionLabel ?? '').split('/').map((part) => part.trim()).filter(Boolean)
   const sectionName = sectionParts[1] ?? sectionParts[0] ?? ''
+  const selectedLimit = Math.max(1, Math.min(projects.length || 1, Number(initialLimit) || 5))
 
   const categoryCounts = new Map<string, number>()
   for (const project of projects) {
@@ -61,9 +66,11 @@ export function Projects({
     }
   }
 
-  const visible = active === 'all'
-    ? projects
-    : projects.filter((project) => project.categories?.some((category) => category.slug === active))
+  const visible = active === 'selected'
+    ? projects.slice(0, selectedLimit)
+    : active === 'all'
+      ? projects
+      : projects.filter((project) => project.categories?.some((category) => category.slug === active))
   const featured = visible[0]
   const projectRows = visible.slice(1)
   const featuredUrl = safeHttpsUrl(featured?.url)
@@ -83,14 +90,14 @@ export function Projects({
           <div>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-3">
               <h2
-                className="m-0 font-display font-bold"
-                style={{ fontSize: 'clamp(38px, 5.5vw, 72px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}
+                className="m-0 serif-it font-normal"
+                style={{ fontSize: 'clamp(42px, 5.8vw, 78px)', lineHeight: 1.02 }}
               >
                 <MaskLine>
                   {title?.includes('shipped') ? (
                     <>
                       {title.split('shipped')[0]}
-                      <span className="font-display text-accent">shipped</span>
+                      <span className="serif-it text-accent">shipped</span>
                       {title.split('shipped').slice(1).join('shipped')}
                     </>
                   ) : (
@@ -102,6 +109,14 @@ export function Projects({
               {/* filters */}
               <FadeUp delay={0.15}>
                 <div className="flex flex-wrap items-baseline gap-5 pb-2">
+                  <button
+                    type="button"
+                    onClick={() => setActive('selected')}
+                    className="filter-tog"
+                    data-active={active === 'selected'}
+                  >
+                    {(selectedLabel || 'selected')}({selectedLimit})
+                  </button>
                   <button
                     type="button"
                     onClick={() => setActive('all')}
@@ -151,8 +166,8 @@ export function Projects({
                       <span className="paren">{featuredLabel}</span>
                     </div>
                     <h3
-                      className="m-0 font-display font-bold tracking-[-0.025em] leading-[0.96] text-ink group-hover:text-accent transition-colors duration-300"
-                      style={{ fontSize: 'clamp(34px, 5.2vw, 72px)' }}
+                      className="m-0 serif-it font-normal leading-[0.98] text-ink group-hover:text-accent transition-colors duration-300"
+                      style={{ fontSize: 'clamp(38px, 5.2vw, 74px)' }}
                     >
                       {featured.title}
                     </h3>
@@ -221,8 +236,8 @@ export function Projects({
 
                       {/* title — the hero of the row */}
                       <h3
-                        className="m-0 font-display font-bold tracking-[-0.025em] leading-none text-ink transition-transform duration-300 group-hover:translate-x-2 min-w-0 truncate"
-                        style={{ fontSize: 'clamp(26px, 3.6vw, 46px)', transitionTimingFunction: 'cubic-bezier(0.625, 0.05, 0, 1)' }}
+                        className="m-0 serif-it font-normal leading-none text-ink transition-transform duration-300 group-hover:translate-x-2 min-w-0 truncate"
+                        style={{ fontSize: 'clamp(29px, 3.7vw, 48px)', transitionTimingFunction: 'cubic-bezier(0.625, 0.05, 0, 1)' }}
                       >
                         {project.title}
                       </h3>

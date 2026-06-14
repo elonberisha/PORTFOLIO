@@ -66,6 +66,8 @@ const EMPTY_SETTINGS = {
   projectsSectionLabel: '',
   projectsTitle: '',
   projectsSubtitle: '',
+  projectsSelectedLabel: '',
+  projectsInitialLimit: 5,
   projectsAllLabel: '',
   projectsFeaturedLabel: '',
   projectsStackLabel: '',
@@ -366,6 +368,8 @@ export default async function Page() {
           sectionLabel={s.projectsSectionLabel}
           title={s.projectsTitle}
           subtitle={s.projectsSubtitle}
+          selectedLabel={s.projectsSelectedLabel}
+          initialLimit={s.projectsInitialLimit}
           allLabel={s.projectsAllLabel}
           featuredLabel={s.projectsFeaturedLabel}
           stackLabel={s.projectsStackLabel}
