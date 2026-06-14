@@ -13,7 +13,6 @@ import { About } from '@/components/About'
 import { Stack } from '@/components/Stack'
 import { Projects } from '@/components/Projects'
 import { Certifications } from '@/components/Certifications'
-import { AISearchProfile } from '@/components/AISearchProfile'
 import { Contact } from '@/components/Contact'
 import { Footer } from '@/components/Footer'
 import { safeHttpsUrl } from '@/lib/safe-url'
@@ -376,16 +375,6 @@ export default async function Page() {
           yearLabel={s.projectsYearLabel}
           typeLabel={s.projectsTypeLabel}
           fallbackTypeLabel={s.projectsFallbackTypeLabel}
-        />
-        <AISearchProfile
-          sectionLabel={s.aiSearchSectionLabel}
-          title={s.aiSearchTitle || 'AI-searchable profile'}
-          summary={entitySummary}
-          role={entityRole}
-          keywords={s.entityKeywords}
-          knowsAbout={knowsAbout}
-          memberOfName={s.memberOfName}
-          facts={aiSearchFacts}
         />
         <Certifications
           certs={certifications}
