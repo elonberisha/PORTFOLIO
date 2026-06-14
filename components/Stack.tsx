@@ -38,15 +38,15 @@ export function Stack({ groups, sectionLabel = '', title = '', subtitle = '' }: 
 
           <div>
             <h2
-              className="m-0 font-display font-bold"
-              style={{ fontSize: 'clamp(38px, 5.5vw, 72px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}
+              className="m-0 serif-it font-normal"
+              style={{ fontSize: 'clamp(42px, 5.8vw, 78px)', lineHeight: 1.02 }}
             >
               {titleLines.map((line, index) => (
                 <MaskLine key={`${line}-${index}`} delay={index * 0.1}>
                   {line.includes('tools') ? (
                     <>
                       {line.split('tools')[0]}
-                      <span className="font-display text-accent">tools</span>
+                      <span className="serif-it text-accent">tools</span>
                       {line.split('tools').slice(1).join('tools')}
                     </>
                   ) : (
@@ -68,14 +68,14 @@ export function Stack({ groups, sectionLabel = '', title = '', subtitle = '' }: 
             <div className={subtitle ? '' : 'mt-14'}>
               {groups.map((g, idx) => (
                 <FadeUp key={g._id} delay={idx * 0.06}>
-                  <div className="rule-t grid grid-cols-1 md:grid-cols-[64px_220px_1fr] gap-4 md:gap-8 py-9 items-start">
+                  <div className="rule-t grid grid-cols-1 md:grid-cols-[42px_minmax(210px,0.52fr)_minmax(0,1fr)] gap-4 md:gap-5 py-9 items-start">
                     {/* index */}
                     <span className="meta-label pt-1.5">
                       <span className="paren">{String(idx + 1).padStart(2, '0')}</span>
                     </span>
 
                     {/* group name */}
-                    <h3 className="m-0 font-display font-bold text-[21px] tracking-[-0.02em] leading-tight">
+                    <h3 className="m-0 serif-it font-normal text-[28px] leading-[1.05]">
                       {g.name}
                     </h3>
 

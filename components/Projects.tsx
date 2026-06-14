@@ -228,7 +228,7 @@ export function Projects({
                     transition={{ duration: 0.5, ease: EASE, delay: i * 0.05 }}
                     className={`proj-row group block py-8 ${projectUrl ? 'cursor-pointer' : 'cursor-default'}`}
                   >
-                    <div className="grid grid-cols-[44px_1fr_auto] md:grid-cols-[64px_1fr_minmax(0,300px)_70px_40px] gap-4 md:gap-7 items-center">
+                    <div className="grid grid-cols-[34px_minmax(0,1fr)_auto] md:grid-cols-[42px_minmax(300px,1.35fr)_minmax(0,260px)_48px_28px] gap-4 md:gap-5 items-center">
                       {/* index */}
                       <span className="font-mono text-[11px] text-faint group-hover:text-accent transition-colors duration-200">
                         {String(i + 2).padStart(2, '0')}
@@ -236,8 +236,8 @@ export function Projects({
 
                       {/* title — the hero of the row */}
                       <h3
-                        className="m-0 serif-it font-normal leading-none text-ink transition-transform duration-300 group-hover:translate-x-2 min-w-0 truncate"
-                        style={{ fontSize: 'clamp(29px, 3.7vw, 48px)', transitionTimingFunction: 'cubic-bezier(0.625, 0.05, 0, 1)' }}
+                        className="m-0 serif-it font-normal leading-[0.98] text-ink transition-transform duration-300 group-hover:translate-x-1 min-w-0"
+                        style={{ fontSize: 'clamp(29px, 3.25vw, 45px)', transitionTimingFunction: 'cubic-bezier(0.625, 0.05, 0, 1)' }}
                       >
                         {project.title}
                       </h3>
