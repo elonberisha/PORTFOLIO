@@ -25,46 +25,22 @@ const client = createClient({
 const keepCategories = [
   ['AI & RAG Platforms', 'ai-rag-platforms', 1],
   ['SaaS Platforms', 'saas-platforms', 2],
-  ['Social Impact Platforms', 'social-impact-platforms', 3],
-  ['Client Business Websites', 'client-business-websites', 4],
-  ['Backend APIs & Utilities', 'backend-apis-utilities', 5],
-  ['Education Systems', 'education-systems', 6],
-  ['Developer Tools', 'developer-tools', 7],
-  ['Mobile Apps', 'mobile-apps', 8],
+  ['Education Systems', 'education-systems', 3],
+  ['Developer Tools', 'developer-tools', 4],
 ]
 
 const projectCategories = {
   'project-1keyai': ['ai-rag-platforms', 'developer-tools'],
   'project-eu-guide-ks': ['ai-rag-platforms', 'education-systems'],
   'project-schedycore': ['saas-platforms'],
-  'project-qrcore': ['backend-apis-utilities', 'developer-tools'],
-  'project-employy': ['saas-platforms'],
   'project-bts-course-management': ['education-systems', 'saas-platforms'],
-  'project-devycore': ['client-business-websites'],
-  'project-ab-bau-fliesen': ['client-business-websites'],
-  'project-duraku-beschichtung': ['client-business-websites'],
-  'project-morina-baustoffe': ['client-business-websites'],
-  'project-unify': ['social-impact-platforms', 'saas-platforms'],
-  'project-eduflow': ['mobile-apps', 'education-systems'],
-  'project-floreta-berisha': ['client-business-websites'],
-  'project-enisi-store': ['client-business-websites'],
 }
 
 const projectOrder = {
   'project-1keyai': 1,
   'project-eu-guide-ks': 2,
   'project-schedycore': 3,
-  'project-qrcore': 4,
-  'project-employy': 5,
-  'project-bts-course-management': 6,
-  'project-devycore': 7,
-  'project-ab-bau-fliesen': 8,
-  'project-duraku-beschichtung': 9,
-  'project-morina-baustoffe': 10,
-  'project-unify': 11,
-  'project-eduflow': 12,
-  'project-floreta-berisha': 13,
-  'project-enisi-store': 14,
+  'project-bts-course-management': 4,
 }
 
 const ref = (slug) => ({
@@ -84,7 +60,19 @@ for (const [title, slug, order] of keepCategories) {
 }
 
 for (const [id, slugs] of Object.entries(projectCategories)) {
-  await client.patch(id).set({ categories: slugs.map(ref), order: projectOrder[id] }).commit()
+  const exists = await client.fetch('defined(*[_id == $id][0]._id)', { id })
+  if (exists) {
+    await client.patch(id).set({ categories: slugs.map(ref), order: projectOrder[id] }).commit()
+  }
+}
+
+const keepProjectIds = Object.keys(projectCategories)
+const staleProjects = await client.fetch('*[_type == "project" && !(_id in $keepProjectIds)]{_id, title}', {
+  keepProjectIds,
+})
+
+for (const project of staleProjects) {
+  await client.delete(project._id)
 }
 
 const keepIds = keepCategories.map(([, slug]) => `projectCategory-${slug}`)
@@ -106,4 +94,17 @@ const current = await client.fetch(
   }`,
 )
 
-console.log(JSON.stringify({ kept: current.length, removed: stale.length, categories: current, removedCategories: stale }, null, 2))
+console.log(
+  JSON.stringify(
+    {
+      kept: current.length,
+      removedCategories: stale.length,
+      removedProjects: staleProjects.length,
+      categories: current,
+      staleCategories: stale,
+      staleProjects,
+    },
+    null,
+    2,
+  ),
+)
