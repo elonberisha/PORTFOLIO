@@ -112,6 +112,7 @@ export default async function ResumePage() {
   const projects = data.projects as Project[]
   const certifications = data.certifications as Certification[]
   const stackGroups = data.stackGroups as StackGroup[]
+  const resumeProjects = projects.slice(0, 6)
   const name = s?.name ?? ''
   const [firstName, ...lastParts] = name.split(' ')
   const lastName = lastParts.join(' ')
@@ -226,10 +227,10 @@ export default async function ResumePage() {
               </div>
             ))}
 
-            {showProjects && projects.length > 0 && (
+            {showProjects && resumeProjects.length > 0 && (
               <>
                 <h2 className="sh">{resume?.projectsSectionLabel}</h2>
-                {projects.map((project) => (
+                {resumeProjects.map((project) => (
                   <div className="entry" key={project._id}>
                     <div className="eh">
                       <span className="et">{project.title}</span>
