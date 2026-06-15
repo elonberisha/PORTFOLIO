@@ -1,5 +1,5 @@
 import React from 'react'
-import { Document, Page, StyleSheet, Text, View, renderToBuffer } from '@react-pdf/renderer'
+import { Document, Link, Page, StyleSheet, Text, View, renderToBuffer } from '@react-pdf/renderer'
 import { client } from '@/lib/sanity'
 import { certificationsQuery, projectsQuery, resumeQuery, settingsQuery, stackGroupsQuery } from '@/lib/queries'
 
@@ -42,6 +42,7 @@ interface ResumeContent {
   summary?: string
   facts?: ResumeFact[]
   projectsSectionLabel?: string
+  projectsNote?: string
   stackSectionLabel?: string
   certificationsSectionLabel?: string
   customSections?: ResumeSection[]
@@ -57,6 +58,7 @@ interface Project {
   title?: string
   description?: string
   techTag?: string
+  url?: string
   year?: number
   categories?: Array<{ title?: string }>
 }
@@ -228,6 +230,19 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
+  domain: {
+    marginBottom: 3,
+    color: '#1d4e5c',
+    fontSize: 7,
+    textDecoration: 'none',
+  },
+  projectsNote: {
+    marginTop: -3,
+    marginBottom: 7,
+    color: '#8a8275',
+    fontSize: 7.4,
+    lineHeight: 1.25,
+  },
   description: {
     color: '#4a443c',
     fontSize: 8,
@@ -248,6 +263,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.7,
   },
 })
+
+function displayDomain(value?: string) {
+  if (!value) return undefined
+
+  try {
+    return new URL(value).hostname.replace(/^www\./, '')
+  } catch {
+    return value.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '')
+  }
+}
 
 async function getData() {
   if (!client) {
@@ -361,6 +386,7 @@ function ResumePdf({
             {showProjects && projects.length > 0 && (
               <View>
                 <Text style={styles.heading}>{resume?.projectsSectionLabel ?? 'Projects'}</Text>
+                {resume?.projectsNote && <Text style={styles.projectsNote}>{resume.projectsNote}</Text>}
                 {projects.slice(0, 6).map((project) => (
                   <View key={project._id} style={styles.entry} wrap={false}>
                     <View style={styles.entryHead}>
@@ -370,6 +396,11 @@ function ResumePdf({
                     <Text style={styles.meta}>
                       {[project.techTag, ...(project.categories ?? []).map((category) => category.title)].filter(Boolean).join(' - ')}
                     </Text>
+                    {project.url && (
+                      <Link src={project.url} style={styles.domain}>
+                        {displayDomain(project.url)}
+                      </Link>
+                    )}
                     {project.description && <Text style={styles.description}>{project.description}</Text>}
                   </View>
                 ))}

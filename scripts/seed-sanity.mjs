@@ -162,6 +162,7 @@ const documents = [
     _id: 'resume',
     _type: 'resume',
     toolbarLabel: 'Resume',
+    downloadButtonLabel: 'Download PDF',
     printButtonLabel: 'Print / PDF',
     homeButtonLabel: 'Portfolio',
     summary:
@@ -190,6 +191,7 @@ const documents = [
       },
     ],
     projectsSectionLabel: 'Selected Projects',
+    projectsNote: 'A compact selection from a larger project archive.',
     stackSectionLabel: 'Technical Stack',
     certificationsSectionLabel: 'Certifications',
     showProjects: true,

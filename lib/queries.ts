@@ -58,11 +58,13 @@ export const stackGroupsQuery = `*[_type == "stackGroup"] | order(order asc) {
 
 export const resumeQuery = `*[_type == "resume"][0] {
   toolbarLabel,
+  downloadButtonLabel,
   printButtonLabel,
   homeButtonLabel,
   summary,
   facts[] { label, value },
   projectsSectionLabel,
+  projectsNote,
   stackSectionLabel,
   certificationsSectionLabel,
   customSections[] {

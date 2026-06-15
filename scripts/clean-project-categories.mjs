@@ -43,6 +43,13 @@ const projectOrder = {
   'project-bts-course-management': 4,
 }
 
+const projectUrls = {
+  'project-1keyai': 'https://1keyai.org',
+  'project-eu-guide-ks': 'https://euguide-ks.info',
+  'project-schedycore': 'https://arberardita.com',
+  'project-bts-course-management': 'https://britishlschool.online',
+}
+
 const ref = (slug) => ({
   _key: slug,
   _type: 'reference',
@@ -62,7 +69,7 @@ for (const [title, slug, order] of keepCategories) {
 for (const [id, slugs] of Object.entries(projectCategories)) {
   const exists = await client.fetch('defined(*[_id == $id][0]._id)', { id })
   if (exists) {
-    await client.patch(id).set({ categories: slugs.map(ref), order: projectOrder[id] }).commit()
+    await client.patch(id).set({ categories: slugs.map(ref), order: projectOrder[id], url: projectUrls[id] }).commit()
   }
 }
 

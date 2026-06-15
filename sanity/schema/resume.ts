@@ -6,6 +6,7 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({ name: 'toolbarLabel', title: 'Toolbar Label', type: 'string' }),
+    defineField({ name: 'downloadButtonLabel', title: 'Download Button Label', type: 'string' }),
     defineField({ name: 'printButtonLabel', title: 'Print Button Label', type: 'string' }),
     defineField({ name: 'homeButtonLabel', title: 'Home Button Label', type: 'string' }),
     defineField({ name: 'summary', title: 'Profile Summary', type: 'text', rows: 4 }),
@@ -24,6 +25,7 @@ export default defineType({
       ],
     }),
     defineField({ name: 'projectsSectionLabel', title: 'Projects Section Label', type: 'string' }),
+    defineField({ name: 'projectsNote', title: 'Projects Note', type: 'string' }),
     defineField({ name: 'stackSectionLabel', title: 'Stack Section Label', type: 'string' }),
     defineField({ name: 'certificationsSectionLabel', title: 'Certifications Section Label', type: 'string' }),
     defineField({

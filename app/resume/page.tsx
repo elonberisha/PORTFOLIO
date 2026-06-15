@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { client } from '@/lib/sanity'
 import { settingsQuery, projectsQuery, certificationsQuery, stackGroupsQuery, resumeQuery } from '@/lib/queries'
 import { ResumeToolbar } from '@/components/ResumeToolbar'
-import { safeContactUrl } from '@/lib/safe-url'
+import { safeContactUrl, safeHttpsUrl } from '@/lib/safe-url'
 
 interface ContactLink {
   label: string
@@ -19,6 +19,7 @@ interface Project {
   title: string
   description?: string
   techTag?: string
+  url?: string
   categories?: Array<{ title?: string }>
   year?: number
 }
@@ -55,11 +56,13 @@ interface ResumeSection {
 
 interface ResumeContent {
   toolbarLabel?: string
+  downloadButtonLabel?: string
   printButtonLabel?: string
   homeButtonLabel?: string
   summary?: string
   facts?: ResumeFact[]
   projectsSectionLabel?: string
+  projectsNote?: string
   stackSectionLabel?: string
   certificationsSectionLabel?: string
   customSections?: ResumeSection[]
@@ -102,6 +105,16 @@ async function getResumeData() {
     }
   } catch {
     return { settings: null, resume: null, projects: [], certifications: [], stackGroups: [] }
+  }
+}
+
+function displayDomain(value?: string) {
+  if (!value) return undefined
+
+  try {
+    return new URL(value).hostname.replace(/^www\./, '')
+  } catch {
+    return value.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '')
   }
 }
 
@@ -162,7 +175,9 @@ export default async function ResumePage() {
         .entry .et { font-family: var(--display); font-weight: 600; font-size: 10.4pt; color: var(--ink); line-height: 1.14; }
         .entry .edate { font-family: var(--mono); font-size: 7.8pt; color: var(--ink-mute); white-space: nowrap; }
         .entry .eplace { font-family: var(--mono); font-size: 7.5pt; color: var(--ink-mute); margin-bottom: 4pt; text-transform: uppercase; letter-spacing: 0.04em; }
+        .entry .domain { display: inline-block; margin-bottom: 4pt; font-family: var(--mono); font-size: 7.6pt; color: var(--accent); text-decoration: none; overflow-wrap: anywhere; }
         .entry p { font-size: 8.9pt; color: var(--ink-dim); line-height: 1.37; }
+        .projects-note { margin: -3pt 0 8pt; font-size: 8.2pt; color: var(--ink-mute); line-height: 1.35; }
         .skills-grid { display: grid; grid-template-columns: 1fr; gap: 7pt; }
         .skill-cell h3 { font-family: var(--mono); font-size: 7.4pt; text-transform: uppercase; letter-spacing: 0.11em; color: var(--accent); margin-bottom: 3pt; }
         .skill-cell p { font-size: 8pt; color: var(--ink-dim); line-height: 1.35; }
@@ -193,6 +208,7 @@ export default async function ResumePage() {
 
       <ResumeToolbar
         toolbarLabel={resume?.toolbarLabel}
+        downloadButtonLabel={resume?.downloadButtonLabel}
         printButtonLabel={resume?.printButtonLabel}
         homeButtonLabel={resume?.homeButtonLabel}
       />
@@ -272,15 +288,27 @@ export default async function ResumePage() {
             {showProjects && resumeProjects.length > 0 && (
               <>
                 <h2 className="sh">{resume?.projectsSectionLabel}</h2>
+                {resume?.projectsNote && <p className="projects-note">{resume.projectsNote}</p>}
                 {resumeProjects.map((project) => (
-                  <div className="entry" key={project._id}>
-                    <div className="eh">
-                      <span className="et">{project.title}</span>
-                      <span className="edate">{project.year}</span>
-                    </div>
-                    <div className="eplace">{[project.techTag, ...(project.categories ?? []).map((category) => category.title)].filter(Boolean).join(' - ')}</div>
-                    <p>{project.description}</p>
-                  </div>
+                  (() => {
+                    const projectUrl = safeHttpsUrl(project.url)
+
+                    return (
+                      <div className="entry" key={project._id}>
+                        <div className="eh">
+                          <span className="et">{project.title}</span>
+                          <span className="edate">{project.year}</span>
+                        </div>
+                        <div className="eplace">{[project.techTag, ...(project.categories ?? []).map((category) => category.title)].filter(Boolean).join(' - ')}</div>
+                        {projectUrl && (
+                          <a className="domain" href={projectUrl} target="_blank" rel="noreferrer">
+                            {displayDomain(projectUrl)}
+                          </a>
+                        )}
+                        <p>{project.description}</p>
+                      </div>
+                    )
+                  })()
                 ))}
               </>
             )}
