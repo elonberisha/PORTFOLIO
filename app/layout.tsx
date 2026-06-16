@@ -10,7 +10,7 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: 'swap',
 })
 
-const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-K7RGW5SK78'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://elonberisha.com'),

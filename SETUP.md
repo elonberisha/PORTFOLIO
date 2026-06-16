@@ -18,7 +18,7 @@ Pastaj edito `.env.local`:
 ```env
 NEXT_PUBLIC_SANITY_PROJECT_ID=abc12345   ← ID nga hapi 1
 NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-K7RGW5SK78
 ```
 
 ## 3. Lësho projektin
@@ -62,7 +62,7 @@ STUDIO_BASIC_USER=your_studio_user
 STUDIO_BASIC_PASSWORD=your_long_random_password
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id_here
 NEXT_PUBLIC_SANITY_DATASET=production
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-K7RGW5SK78
 ```
 
 ### Google Analytics
@@ -72,10 +72,10 @@ Create a Google Analytics 4 web stream for `https://elonberisha.com`, then copy 
 Add it in Vercel as:
 
 ```env
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-K7RGW5SK78
 ```
 
-Redeploy after adding or changing the value. Analytics is disabled automatically when this variable is empty.
+Redeploy after adding or changing the value. The app has `G-K7RGW5SK78` as the default analytics ID, and Vercel can override it with `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
 
 `/studio` is protected by Basic Auth only in production. On production, Studio is only available on the host configured with `STUDIO_HOST`. On the public domain (`elonberisha.com`), `/studio` returns `404`.
 
