@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { IBM_Plex_Mono } from 'next/font/google'
+import { Analytics } from '@/components/Analytics'
 import './globals.css'
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -8,6 +9,8 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ['400', '500', '600'],
   display: 'swap',
 })
+
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://elonberisha.com'),
@@ -52,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={ibmPlexMono.variable} suppressHydrationWarning>
       <body>{children}</body>
+      <Analytics gaId={gaMeasurementId} />
     </html>
   )
 }
