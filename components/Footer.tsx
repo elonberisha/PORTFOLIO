@@ -29,13 +29,13 @@ export function Footer({ name = '', leftText = '', rightText = '', clockLabel = 
   const letters = (name ?? '').toLowerCase().split('')
 
   return (
-    <footer className="rule-t pt-16 pb-7 overflow-hidden">
+    <footer className="rule-t pt-10 pb-6 md:pt-16 md:pb-7 overflow-hidden">
       <div className="wrap">
         {/* giant signature — click takes you back to the top */}
         {name && (
           <a
             href="#top"
-            className="gname block text-center mb-14"
+            className="gname block text-center mb-8 md:mb-14"
             style={{ fontSize: 'clamp(44px, 9.5vw, 130px)' }}
             aria-label={name}
           >

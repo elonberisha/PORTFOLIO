@@ -26,7 +26,7 @@ export function Stack({ groups, sectionLabel = '', title = '', subtitle = '' }: 
   const titleLines = (title ?? '').split('|')
 
   return (
-    <section id="stack" className="rule-t py-24">
+    <section id="stack" className="rule-t section-py">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-10 lg:gap-16">
           {/* sticky editorial label */}
@@ -58,7 +58,7 @@ export function Stack({ groups, sectionLabel = '', title = '', subtitle = '' }: 
 
             {subtitle && (
               <FadeUp delay={0.15}>
-                <p className="m-0 mt-5 mb-14 text-[15px] text-dim font-light max-w-[440px] leading-[1.7]">
+                <p className="m-0 mt-4 mb-8 md:mb-14 text-[15px] text-dim font-light max-w-[440px] leading-[1.7]">
                   {subtitle}
                 </p>
               </FadeUp>
@@ -68,29 +68,29 @@ export function Stack({ groups, sectionLabel = '', title = '', subtitle = '' }: 
             <div className={subtitle ? '' : 'mt-14'}>
               {groups.map((g, idx) => (
                 <FadeUp key={g._id} delay={idx * 0.06}>
-                  <div className="rule-t grid grid-cols-1 md:grid-cols-[42px_minmax(210px,0.52fr)_minmax(0,1fr)] gap-4 md:gap-5 py-9 items-start">
+                  <div className="rule-t grid grid-cols-[auto_1fr] md:grid-cols-[42px_minmax(210px,0.52fr)_minmax(0,1fr)] gap-x-3 gap-y-2 md:gap-4 md:gap-5 py-4 md:py-9 items-start">
                     {/* index */}
-                    <span className="meta-label pt-1.5">
+                    <span className="meta-label pt-1">
                       <span className="paren">{String(idx + 1).padStart(2, '0')}</span>
                     </span>
 
                     {/* group name */}
-                    <h3 className="m-0 serif-it font-normal text-[28px] leading-[1.05]">
+                    <h3 className="m-0 serif-it font-normal text-[17px] md:text-[28px] leading-[1.05]">
                       {g.name}
                     </h3>
 
                     {/* items — inline editorial list */}
-                    <div className="flex flex-wrap gap-x-2 gap-y-3 items-baseline">
+                    <div className="col-span-2 md:col-span-1 flex flex-wrap gap-x-1 gap-y-1.5 md:gap-x-2 md:gap-y-3 items-baseline">
                       {g.items.map((item, i) => (
                         <span key={item.name} className="group inline-flex items-baseline">
-                          <span className="text-[15px] text-ink font-light transition-colors duration-200 group-hover:text-accent cursor-default">
+                          <span className="text-[12px] md:text-[15px] text-ink font-light transition-colors duration-200 group-hover:text-accent cursor-default">
                             {item.name}
                           </span>
-                          <sup className="font-mono text-[9px] text-faint ml-1 tracking-wide">
+                          <sup className="font-mono text-[8px] md:text-[9px] text-faint ml-0.5 md:ml-1 tracking-wide">
                             {item.years}
                           </sup>
                           {i < g.items.length - 1 && (
-                            <span className="text-faint mx-2.5 select-none" aria-hidden="true">/</span>
+                            <span className="text-faint mx-1.5 md:mx-2.5 select-none" aria-hidden="true">/</span>
                           )}
                         </span>
                       ))}

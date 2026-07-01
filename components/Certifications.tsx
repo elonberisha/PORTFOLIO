@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MaskLine, FadeUp, EASE } from './Reveal'
 import { safeHttpsUrl, safeSanityAssetUrl } from '@/lib/safe-url'
@@ -64,8 +64,16 @@ export function Certifications({
 }: Props) {
   const [active, setActive] = useState<string>('all')
   const [preview, setPreview] = useState<Cert | null>(null)
+  const [isMobileSheet, setIsMobileSheet] = useState(false)
   const sectionParts = (sectionLabel ?? '').split('/').map((part) => part.trim()).filter(Boolean)
   const sectionName = sectionParts[1] ?? sectionParts[0] ?? ''
+
+  useEffect(() => {
+    const check = () => setIsMobileSheet(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check, { passive: true })
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const filters = [
     { label: allLabel, value: 'all' },
@@ -84,7 +92,7 @@ export function Certifications({
   const previewIsImage = preview ? isImagePreview(preview) : false
 
   return (
-    <section id="certs" className="rule-t py-24 bg-bg-2">
+    <section id="certs" className="rule-t section-py bg-bg-2">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-10 lg:gap-16">
           {/* sticky editorial label */}
@@ -95,7 +103,7 @@ export function Certifications({
           </div>
 
           <div>
-            <div className="flex flex-col gap-8 mb-14">
+            <div className="flex flex-col gap-8 mb-12 md:mb-14">
               <h2
                 className="m-0 font-display font-bold"
                 style={{ fontSize: 'clamp(38px, 5.5vw, 72px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}
@@ -114,12 +122,12 @@ export function Certifications({
               </h2>
 
               <FadeUp delay={0.15}>
-                <div className="flex flex-wrap items-baseline justify-center gap-5 pb-2">
+                <div className="flex items-baseline gap-5 pb-2 overflow-x-auto no-scrollbar flex-nowrap md:flex-wrap md:overflow-x-visible justify-start md:justify-center">
                   {filters.map((f) => (
                     <button
                       key={f.value}
                       onClick={() => setActive(f.value)}
-                      className="filter-tog"
+                      className="filter-tog flex-shrink-0"
                       data-active={active === f.value}
                     >
                       {f.label}{f.value === 'all' ? `(${certs.length})` : ''}
@@ -144,7 +152,7 @@ export function Certifications({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.4, ease: EASE, delay: i * 0.04 }}
-                      className={`group relative bg-bg p-7 flex flex-col gap-6 min-h-[200px] transition-colors duration-300 hover:bg-card ${hasPreview ? 'cursor-pointer' : ''}`}
+                      className={`group relative bg-bg p-5 sm:p-7 flex flex-col gap-6 min-h-[180px] sm:min-h-[200px] transition-colors duration-300 hover:bg-card ${hasPreview ? 'cursor-pointer' : ''}`}
                       role={hasPreview ? 'button' : undefined}
                       tabIndex={hasPreview ? 0 : undefined}
                       onClick={() => hasPreview && setPreview(cert)}
@@ -208,11 +216,11 @@ export function Certifications({
         </div>
       </div>
 
-      {/* ── Preview modal ── */}
+      {/* ── Preview modal — bottom sheet on mobile, centered on desktop ── */}
       <AnimatePresence>
         {preview && previewUrl && (
           <motion.div
-            className="fixed inset-0 z-[80] px-4 py-6"
+            className={`fixed inset-0 z-[80] ${isMobileSheet ? 'flex flex-col justify-end' : 'px-4 py-6'}`}
             style={{ background: 'rgba(22, 21, 19, 0.55)', backdropFilter: 'blur(6px)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -223,36 +231,36 @@ export function Certifications({
             onClick={() => setPreview(null)}
           >
             <motion.div
-              className="mx-auto flex h-full max-w-5xl flex-col overflow-hidden bg-bg"
+              className={`flex flex-col overflow-hidden bg-bg ${isMobileSheet ? 'w-full max-h-[88svh] rounded-t-2xl' : 'mx-auto h-full max-w-5xl'}`}
               style={{ border: '1px solid var(--color-hair-2)' }}
-              initial={{ y: 24, scale: 0.985 }}
-              animate={{ y: 0, scale: 1 }}
-              exit={{ y: 24, scale: 0.985 }}
+              initial={isMobileSheet ? { y: '100%' } : { y: 24, scale: 0.985 }}
+              animate={isMobileSheet ? { y: 0 } : { y: 0, scale: 1 }}
+              exit={isMobileSheet ? { y: '100%' } : { y: 24, scale: 0.985 }}
               transition={{ duration: 0.35, ease: EASE }}
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="rule-b flex items-center justify-between gap-4 px-6 py-4">
-                <div>
+              <div className="rule-b flex items-center justify-between gap-4 px-6 py-4 flex-shrink-0">
+                <div className="min-w-0">
                   <div className="meta-label mb-1">
                     <span className="paren">—</span> {modalLabel}
                   </div>
-                  <h3 className="m-0 font-display font-bold text-[22px] tracking-[-0.02em] leading-tight">
+                  <h3 className="m-0 font-display font-bold text-[22px] tracking-[-0.02em] leading-tight truncate">
                     {preview.title}
                   </h3>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 flex-shrink-0">
                   <a
                     href={previewUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link-under font-mono text-[10px] uppercase tracking-[0.14em] text-ink"
+                    className="link-under font-mono text-[10px] uppercase tracking-[0.14em] text-ink hidden sm:inline"
                   >
                     {openLabel} ↗
                   </a>
                   <button
                     type="button"
                     onClick={() => setPreview(null)}
-                    className="h-10 w-10 flex items-center justify-center text-[18px] text-dim hover:text-ink hover:bg-bg-2 transition-colors duration-200"
+                    className="h-11 w-11 md:h-10 md:w-10 flex items-center justify-center text-[18px] text-dim hover:text-ink hover:bg-bg-2 transition-colors duration-200"
                     style={{ border: '1px solid var(--color-hair)' }}
                     aria-label={closeLabel ?? undefined}
                   >

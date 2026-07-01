@@ -77,7 +77,7 @@ export function Projects({
   const featuredPreviewUrl = safeSanityAssetUrl(featured?.previewImageUrl)
 
   return (
-    <section id="projects" className="rule-t py-24">
+    <section id="projects" className="rule-t section-py">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-10 lg:gap-16">
           {/* sticky editorial label */}
@@ -108,7 +108,7 @@ export function Projects({
 
               {/* filters */}
               <FadeUp delay={0.15}>
-                <div className="flex flex-wrap items-baseline gap-5 pb-2">
+                <div className="flex items-baseline gap-5 pb-2 overflow-x-auto no-scrollbar flex-nowrap md:flex-wrap md:overflow-x-visible">
                   <button
                     type="button"
                     onClick={() => setActive('selected')}
@@ -159,7 +159,7 @@ export function Projects({
                   href={featuredUrl}
                   target={featuredUrl ? '_blank' : undefined}
                   rel={featuredUrl ? 'noopener noreferrer' : undefined}
-                  className={`group grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-8 rule-t rule-b py-8 ${featuredUrl ? 'cursor-pointer' : 'cursor-default'}`}
+                  className={`group grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-8 rule-t rule-b py-6 md:py-8 ${featuredUrl ? 'cursor-pointer' : 'cursor-default'}`}
                 >
                   <div className="min-w-0">
                     <div className="meta-label mb-5">
@@ -226,7 +226,7 @@ export function Projects({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5, ease: EASE, delay: i * 0.05 }}
-                    className={`proj-row group block py-8 ${projectUrl ? 'cursor-pointer' : 'cursor-default'}`}
+                    className={`proj-row group block py-6 md:py-8 ${projectUrl ? 'cursor-pointer' : 'cursor-default'}`}
                   >
                     <div className="grid grid-cols-[34px_minmax(0,1fr)_auto] md:grid-cols-[42px_minmax(300px,1.35fr)_minmax(0,260px)_48px_28px] gap-4 md:gap-5 items-center">
                       {/* index */}
@@ -276,7 +276,7 @@ export function Projects({
 
                     {/* mobile preview */}
                     {projectPreviewUrl && (
-                      <div className="md:hidden relative aspect-[16/9] overflow-hidden mt-5 border border-hair">
+                      <div className="md:hidden relative aspect-[4/3] overflow-hidden mt-5 border border-hair">
                         <Image
                           src={projectPreviewUrl}
                           alt={`${project.title} preview`}

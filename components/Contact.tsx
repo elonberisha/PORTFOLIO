@@ -69,7 +69,7 @@ export function Contact({
   const safeCvUrl = safeResumeUrl(resumeUrl)
 
   return (
-    <section id="contact" className="rule-t py-28">
+    <section id="contact" className="rule-t py-16 md:py-28">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-10 lg:gap-16">
           {/* sticky editorial label */}
@@ -82,7 +82,7 @@ export function Contact({
           <div>
             {/* Title */}
             <h2
-              className="m-0 mb-8 font-display font-bold"
+              className="m-0 mb-5 md:mb-8 font-display font-bold"
               style={{ fontSize: 'clamp(44px, 7vw, 96px)', lineHeight: 0.98, letterSpacing: '-0.035em' }}
             >
               <MaskLine>
@@ -100,7 +100,7 @@ export function Contact({
 
             {intro && (
               <FadeUp delay={0.1}>
-                <p className="m-0 mb-12 text-[16px] leading-[1.75] text-dim font-light max-w-[460px]">
+                <p className="m-0 mb-8 md:mb-12 text-[16px] leading-[1.75] text-dim font-light max-w-[460px]">
                   {intro}
                 </p>
               </FadeUp>
@@ -111,7 +111,7 @@ export function Contact({
               <FadeUp delay={0.18}>
                 <a
                   href={`mailto:${email}`}
-                  className="link-under inline-block serif-it text-ink mb-16 break-all"
+                  className="link-under inline-block serif-it text-ink mb-10 md:mb-16 overflow-hidden text-ellipsis max-w-full"
                   style={{ fontSize: 'clamp(24px, 4vw, 52px)', lineHeight: 1.15 }}
                 >
                   {email}
@@ -151,7 +151,7 @@ export function Contact({
                       href={l.href}
                       target={l.href.startsWith('https:') ? '_blank' : undefined}
                       rel={l.href.startsWith('https:') ? 'noopener noreferrer' : undefined}
-                      className="rule-b group grid grid-cols-[90px_1fr_auto] gap-4 py-4 items-baseline"
+                      className="rule-b group grid grid-cols-[72px_1fr_auto] sm:grid-cols-[90px_1fr_auto] gap-4 py-4 items-baseline"
                     >
                       <span className="meta-label">{l.label}</span>
                       <span className="text-[13px] font-mono text-dim truncate group-hover:text-accent transition-colors duration-200">

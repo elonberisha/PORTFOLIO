@@ -312,3 +312,31 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* ── Mobile responsive utilities ── */
+@media (max-width: 639px) {
+  .wrap { padding: 0 18px; }
+}
+
+/* Section vertical rhythm — tighter on mobile, full on md+ */
+.section-py { padding-top: 56px; padding-bottom: 56px; }
+@media (min-width: 768px) {
+  .section-py { padding-top: 96px; padding-bottom: 96px; }
+}
+
+/* Hide scrollbars on overflow-x scroll containers */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Larger tap targets on mobile for filter toggles and buttons */
+@media (max-width: 767px) {
+  .filter-tog { min-height: 36px; display: inline-flex; align-items: center; }
+  .btn-ink { padding: 14px 22px; }
+}
+
+/* Hide portrait decorative depth layers on mobile */
+@media (max-width: 639px) {
+  .frame-offset::after { display: none; }
+  .portrait-depth { display: none; }
+  .portrait-sheen { display: none; }
+}

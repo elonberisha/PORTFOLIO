@@ -1,6 +1,6 @@
 'use client'
 import type { CSSProperties } from 'react'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -66,24 +66,45 @@ export function Hero({
   const shouldReduceMotion = useReducedMotion()
   const safePrimaryCtaUrl = safeResumeUrl(resumeUrl) ?? '/resume'
 
+  // Disable 3D effects on small screens to prevent scroll jank
+  const [isMobile, setIsMobile] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check, { passive: true })
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  // Server/first-paint never knows viewport size or reduced-motion preference,
+  // so keep 3D off until mounted to avoid a hydration mismatch.
+  const disable3D = !mounted || shouldReduceMotion
+
   const portraitRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: portraitRef,
     offset: ['start end', 'end start'],
   })
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [-22, 22])
-  const rawRotateY = useTransform(scrollYProgress, [0, 0.5, 1], [-18, 0, 14])
-  const rawRotateX = useTransform(scrollYProgress, [0, 0.5, 1], [7, 0, -5])
-  const rawRotateZ = useTransform(scrollYProgress, [0, 0.5, 1], [-1.4, 0, 1.1])
+  const parallaxY = useTransform(scrollYProgress, [0, 1], isMobile ? [-8, 8] : [-22, 22])
+  const rawRotateY = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [-6, 0, 5] : [-18, 0, 14])
+  const rawRotateX = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [3, 0, -2] : [7, 0, -5])
+  const rawRotateZ = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [-0.6, 0, 0.5] : [-1.4, 0, 1.1])
   const rawSheenX = useTransform(scrollYProgress, [0, 1], ['-45%', '55%'])
   const rawShadow = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [
-      '24px 34px 70px rgba(22, 21, 19, 0.18)',
-      '0px 28px 58px rgba(22, 21, 19, 0.12)',
-      '-22px 34px 70px rgba(22, 21, 19, 0.18)',
-    ]
+    isMobile
+      ? [
+          '10px 16px 30px rgba(22, 21, 19, 0.12)',
+          '0px 14px 26px rgba(22, 21, 19, 0.08)',
+          '-10px 16px 30px rgba(22, 21, 19, 0.12)',
+        ]
+      : [
+          '24px 34px 70px rgba(22, 21, 19, 0.18)',
+          '0px 28px 58px rgba(22, 21, 19, 0.12)',
+          '-22px 34px 70px rgba(22, 21, 19, 0.18)',
+        ]
   )
   const rotateY = useSpring(rawRotateY, { stiffness: 120, damping: 28, mass: 0.8 })
   const rotateX = useSpring(rawRotateX, { stiffness: 120, damping: 28, mass: 0.8 })
@@ -92,9 +113,9 @@ export function Hero({
 
   return (
     <section id="top" className="relative">
-      <div className="wrap pt-12 pb-14">
+      <div className="wrap pt-8 pb-10 md:pt-12 md:pb-14">
         {/* status strip */}
-        <div className="flex items-center justify-between gap-4 pb-10">
+        <div className="flex items-center justify-between gap-4 pb-6 md:pb-10">
           {eyebrow && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -117,7 +138,7 @@ export function Hero({
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.45fr_1fr] gap-14 lg:gap-10 items-end">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.45fr_1fr] gap-8 lg:gap-10 items-end">
           {/* ── The name — two typographic voices ── */}
           <div>
             <h1
@@ -162,7 +183,7 @@ export function Hero({
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.65 }}
-              className="m-0 mb-10 text-[17px] leading-[1.7] text-dim max-w-[440px] font-light"
+              className="m-0 mb-10 text-[15px] md:text-[17px] leading-[1.7] text-dim max-w-[440px] font-light"
             >
               {heroSub}
             </motion.p>
@@ -172,7 +193,7 @@ export function Hero({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.78 }}
-              className="flex flex-wrap items-center gap-7"
+              className="flex flex-wrap items-center gap-4 sm:gap-7"
             >
               {primaryCtaLabel && (
                 <Link
@@ -198,28 +219,28 @@ export function Hero({
             </motion.div>
           </div>
 
-          {/* Portrait with scroll-linked 3D tilt */}
+          {/* Portrait with scroll-linked 3D tilt — simplified on mobile */}
           <motion.div
             ref={portraitRef}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE, delay: 0.45 }}
-            className="portrait-stage max-w-[380px] w-full justify-self-start lg:justify-self-end"
+            className="portrait-stage max-w-[380px] w-full justify-self-center lg:justify-self-end"
           >
             <motion.div
               className="portrait-card frame-offset"
               style={{
-                rotateX: shouldReduceMotion ? 0 : rotateX,
-                rotateY: shouldReduceMotion ? 0 : rotateY,
-                rotateZ: shouldReduceMotion ? 0 : rotateZ,
-                boxShadow: shouldReduceMotion ? undefined : rawShadow,
+                rotateX: disable3D ? 0 : rotateX,
+                rotateY: disable3D ? 0 : rotateY,
+                rotateZ: disable3D ? 0 : rotateZ,
+                boxShadow: disable3D ? undefined : rawShadow,
               }}
             >
               <div className="portrait-dev portrait-face relative aspect-[4/5] overflow-hidden border border-hair-2 bg-bg-2">
                 {portraitUrl ? (
                   <motion.div
                     className="absolute inset-[-26px]"
-                    style={{ y: shouldReduceMotion ? 0 : parallaxY, willChange: 'transform' }}
+                    style={{ y: disable3D ? 0 : parallaxY, willChange: 'transform' }}
                   >
                     <Image
                       src={portraitUrl}
@@ -227,7 +248,7 @@ export function Hero({
                       fill
                       className="object-cover"
                       priority
-                      sizes="(max-width: 1024px) 100vw, 430px"
+                      sizes="(max-width: 639px) 200px, (max-width: 1024px) 300px, 430px"
                     />
                   </motion.div>
                 ) : (
@@ -237,11 +258,13 @@ export function Hero({
                     </span>
                   </div>
                 )}
-                <motion.span
-                  className="portrait-sheen"
-                  style={{ '--sheen-x': shouldReduceMotion ? '0%' : sheenX } as CSSProperties}
-                  aria-hidden="true"
-                />
+                {!disable3D && (
+                  <motion.span
+                    className="portrait-sheen"
+                    style={{ '--sheen-x': sheenX } as CSSProperties}
+                    aria-hidden="true"
+                  />
+                )}
               </div>
               <span className="portrait-depth" aria-hidden="true" />
             </motion.div>

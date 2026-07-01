@@ -45,7 +45,7 @@ export function About({ aboutQuote, aboutBody, location, university, focus, stat
   const visibleFacts = facts.filter((fact) => fact.value)
 
   return (
-    <section id="about" className="rule-t py-24">
+    <section id="about" className="rule-t section-py">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-10 lg:gap-16">
           {/* sticky editorial label */}
@@ -58,8 +58,8 @@ export function About({ aboutQuote, aboutBody, location, university, focus, stat
           <div>
             {/* Title — serif italic on the name */}
             <h2
-              className="m-0 mb-12 font-display font-bold"
-              style={{ fontSize: 'clamp(38px, 5.5vw, 72px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}
+              className="m-0 mb-6 md:mb-12 font-display font-bold"
+              style={{ fontSize: 'clamp(32px, 8.5vw, 72px)', lineHeight: 1.02, letterSpacing: '-0.03em' }}
             >
               <MaskLine>
                 {title.includes(firstName) && firstName ? (
@@ -74,14 +74,14 @@ export function About({ aboutQuote, aboutBody, location, university, focus, stat
               </MaskLine>
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-12 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-8 md:gap-12 items-start">
               {/* Quote + body */}
               <div>
                 {aboutQuote && (
                   <FadeUp delay={0.1}>
                     <p
-                      className="serif-it m-0 mb-9 text-ink leading-[1.35]"
-                      style={{ fontSize: 'clamp(22px, 2.6vw, 31px)' }}
+                      className="serif-it m-0 mb-5 md:mb-9 text-ink leading-[1.4]"
+                      style={{ fontSize: 'clamp(16px, 4.5vw, 31px)' }}
                     >
                       {aboutQuote}
                     </p>
@@ -103,7 +103,7 @@ export function About({ aboutQuote, aboutBody, location, university, focus, stat
                   {visibleFacts.map((fact) => (
                     <div
                       key={`${fact.label}-${fact.value}`}
-                      className="rule-b grid grid-cols-[100px_1fr] gap-5 py-4 items-baseline"
+                      className="rule-b grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr] gap-5 py-4 items-baseline"
                     >
                       <span className="meta-label">{fact.label}</span>
                       <span className="text-[14px] text-ink leading-relaxed">{fact.value}</span>

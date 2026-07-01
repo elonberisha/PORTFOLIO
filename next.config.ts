@@ -9,6 +9,7 @@ const securityHeaders = [
 ]
 
 const config: NextConfig = {
+  allowedDevOrigins: ['100.124.204.19'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.sanity.io' },
