@@ -14,7 +14,7 @@ const ease = [0.16, 1, 0.3, 1] as const
 function useSafeReducedMotion() {
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
-  const prefersReduced = useSafeReducedMotion()
+  const prefersReduced = useReducedMotion()
   return mounted && !!prefersReduced
 }
 
